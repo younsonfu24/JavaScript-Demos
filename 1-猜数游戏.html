@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>猜数游戏</title>
+</head>
+<body>
+		
+
+	<script>
+	/*
+		实现思路
+		
+		0. 使用知识：弹出提示框、逻辑语句、Math对象的random方法、本地存储、模板字符串
+		1. 打开页面的时候弹出提示框，说明游戏规则，并让玩家输入所猜的数字
+		2. 设置错误提示：
+			(1) 输入内容只能是数字
+			(2) 输入数字要是在规定范围内
+		3. 当输入正确，提示用户，用了多少次猜中数字。
+
+	 */
+	
+		// 定义常量，存储sessionStorage对象
+		const sS = sessionStorage;
+
+		// 存储玩家猜中数字使用的次数
+		var guessTimes = 0; 
+
+		// 存储玩家要猜的数字（0-100的随机数）
+		var theTrueNum = 11;
+
+		// 进入游戏界面，弹出警告框告诉玩家游戏规则
+		
+		if (!sS.getItem("guessTimes")) {
+
+			alert(`跟你讲讲游戏规则吧！
+
+					1. 猜数范围是在0到100的整数(包括0和100);
+					2. 只要在3次尝试之内猜中就可以获得终极大奖哟~`);
+		}
+
+		// 存储玩家所猜的数字
+		var guessNum = Number(prompt("输入你猜的数字吧"));
+
+		// 判断用户输入的是否是数字，如果不是，给玩家发出提示
+		if (!isNaN(guessNum)) {
+			guessNumHundler()
+		} else {
+			alert("输入的要是数字哟");
+		}
+
+		// 封装处理本地存储猜数次数和猜数判断的代码
+		function guessNumHundler() {
+
+			// 用本地存储玩家猜中数字使用次数的处理
+			if(sS.getItem("guessTimes")) {
+
+				// 如果已经不是第一次了，那就继续往猜数次数上加，每次加1
+				guessTimes = parseInt(sS.getItem("guessTimes"));
+				guessTimes += 1;
+				sS.setItem("guessTimes", guessTimes);
+			} else {
+
+				// 如果是第一次猜数，那么给猜数次数加个1，并存到sS里面去
+				guessTimes += 1;
+				sS.setItem("guessTimes", guessTimes);
+			}
+
+			// 判断用户猜数是否正确，并作相应处理
+			if (theTrueNum === guessNum && guessTimes <= 3) {
+
+				// 如果玩家在规定的次数内猜中数字，送上祝贺，并告诉他猜中数字用的次数
+				alert(`恭喜你！最终抱得终极大奖回家！你最终使用的猜数次数是：${guessTimes}`);
+
+				// 当猜中了的时候，重新计算玩家猜数次数（清除sS的数据）
+				sS.clear();
+			} else if (theTrueNum != guessNum && guessTimes >= 3) {
+
+				// 如果玩家在规定的次数内没能猜中数字，给出游戏失败的提示
+				alert(`你已经猜了${guessTimes}次了~
+					很遗憾，你没能在规定次数内猜中数字，不过别灰心，继续来挑战吧！`);
+
+				// 如果超过了规定猜数次数，那就要重新计数了
+				sS.clear();
+			} else {
+
+				// 如果没有猜中，给出提示，并告诉玩家猜中前已经用了多少次机会了
+				alert(`很遗憾，没有猜中~
+					目前你的猜数次数是：${guessTimes}`);
+			}
+		}
+	</script>
+</body>
+</html>
