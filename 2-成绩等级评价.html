@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>成绩等级评价</title>
+
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+		#box {
+			width: 100%;
+		}
+		table {
+			position: absolute;
+			top: 30px;
+			width: 500px;
+			font-family: verdana,arial,sans-serif;
+			font-size:11px;
+			color:#333333;
+			border-width: 1px;
+			border-color: #666666;
+			border-collapse: collapse;
+		}
+		table th {
+			height: 30px;
+			border-width: 1px;
+			padding: 8px;
+			border-style: solid;
+			border-color: #666666;
+			background-color: #dedede;
+			text-align: center;
+		}
+		table td {
+			height: 30px;
+			border-width: 1px;
+			padding: 8px;
+			border-style: solid;
+			border-color: #666666;
+			background-color: #ffffff;
+			text-align: center;
+		}
+		#finalExamMarks {
+			left: 50px;
+		}
+		#finalExamGrade {
+			right: 50px;
+		}
+	</style>
+</head>
+<body>
+
+	<div id="box">
+		<table id="finalExamMarks"></table>
+		<table id="finalExamGrade"></table>
+	</div>
+
+	
+	<!-- art-template原生版本 -->
+	<script src="assets/art-template/template-native.js"></script>
+	<!-- art-template简洁版本 -->
+	<!-- <script src="assets/art-template/template.js"></script> -->
+
+	<script id="tpl1" type="text/html">
+
+			<tr>
+				<th>学号</th>
+				<th>班级</th>
+				<th>姓名</th>
+				<th>语文</th>
+				<th>数学</th>
+				<th>英语</th>
+			</tr>
+
+			<% for (var i=0; i< data.length; i++) { %>
+				<tr>
+					<td><%=data[i].id%></td>
+					<td><%=data[i].name%></td>
+					<td><%=data[i].class%></td>
+					<td><%=data[i].Chinese%></td>
+					<td><%=data[i].Maths%></td>
+					<td><%=data[i].English%></td>
+				</tr>
+			<% } %>
+
+	</script>
+
+	<script type="text/html" id="tpl2">
+	
+			<tr>
+				<th>学号</th>
+				<th>班级</th>
+				<th>姓名</th>
+				<th>语文</th>
+				<th>数学</th>
+				<th>英语</th>
+				<th>总分</th>
+			</tr>
+
+			<% for (var i=0; i< data.length; i++) { %>
+				<tr>
+					<td><%=data[i].id%></td>
+					<td><%=data[i].name%></td>
+					<td><%=data[i].class%></td>
+					<td><%=data[i].Chinese%></td>
+					<td><%=data[i].Maths%></td>
+					<td><%=data[i].English%></td>
+					<td><%=data[i].total%></td>
+				</tr>
+			<% } %>
+
+	</script>
+
+	<script>
+		/*
+			对于实现这个案例，我的想法：
+
+			1. 尽量地多用些已经学过的技术
+			2. 这个案例结合HTML来实现
+			3. 方案：
+				(1) 用表格展示“学生期末考试成绩”的数据。（用CSS处理样式，要求整洁美观）
+				(2) 模拟通过JSON文件获取数据
+				（原生JS不能直接从文件中读取内容）
+				(3) 用art-template模板文件打印数据到数据表上。
+				(4) 用JS获取表格中的数据，并另外打印一张表，显示学生的期末考试成绩等级评价，并计算出总分。
+		 */
+		
+		 // JSON数据
+		 const data1 = [
+			{
+				"id" : "001",
+				"name" : "白云",
+				"class" : "初一1班",
+				"Chinese" : 88,
+				"Maths" : 90,
+				"English" : 100
+			},
+			{
+				"id" : "002",
+				"name" : "黑夜",
+				"class" : "初一1班",
+				"Chinese" : 66,
+				"Maths" : 77,
+				"English" : 55
+			},
+			{
+				"id" : "003",
+				"name" : "雷雨",
+				"class" : "初一1班",
+				"Chinese" : 34,
+				"Maths" : 89,
+				"English" : 100
+			},
+			{
+				"id" : "004",
+				"name" : "火焰",
+				"class" : "初一1班",
+				"Chinese" : 77,
+				"Maths" : 88,
+				"English" : 100
+			},
+			{
+				"id" : "005",
+				"name" : "花儿",
+				"class" : "初一1班",
+				"Chinese" : 54,
+				"Maths" : 10,
+				"English" : 100
+			}
+		];
+
+		// 利用模板引擎技术将数据渲染到表格中
+		var tpl1 = document.getElementById("tpl1").innerHTML;
+		var html1 = template(tpl1, {data: data1});
+		var table1 = document.getElementById("finalExamMarks");
+		table1.innerHTML = html1;
+
+		// 用JS获取学生成绩，并作成绩等级判断
+		var trs = table1.getElementsByTagName("tr");
+		var td0 = trs[1].getElementsByTagName('td');
+		var data2 = [];
+			var a = 0;
+
+		// 遍历渲染出来的成绩表，处理等级评价和计算总分数的数据
+		for (var i=1; i<trs.length; i++) {
+
+			var tds = trs[i].getElementsByTagName("td");
+
+			// 用来存学生等级评价和总分
+			var obj = {
+				id: "",
+				name: "",
+				class: "",
+				Chinese: "",
+				Maths: "",
+				English: "",
+				total: 0
+			}
+			obj.id = tds[0].innerHTML;
+			obj.class = tds[1].innerHTML;
+			obj.name = tds[2].innerHTML;
+			obj.Chinese = getGrade(parseInt(tds[3].innerHTML));
+			obj.Maths = getGrade(parseInt(tds[4].innerHTML));
+			obj.English = getGrade(parseInt(tds[5].innerHTML));
+			obj.total = getTotal([parseInt(tds[3].innerHTML),parseInt(tds[4].innerHTML),parseInt(tds[5].innerHTML)]);
+			data2.push(obj);
+		}
+
+		// 将获得的等级评价和总分数据另外打印在一个表上
+		var tpl2 = document.getElementById("tpl2").innerHTML;
+		var html2 = template(tpl2, {data: data2});
+		document.getElementById("finalExamGrade").innerHTML = html2;
+
+
+		// 封装一个对学生考试成绩做判断的函数
+		function getGrade(marks) {
+			var marks = Math.floor(marks/10);
+			switch(marks) {
+				case 10:
+					return "AAA"
+					break;
+				case 9:
+					return "AA"
+					break;
+				case 8:
+					return "A"
+					break;
+				case 7:
+					return "B"
+					break;
+				case 6:
+					return "C"
+					break;
+				default:
+					return "D"
+					break;
+			}
+		}
+
+		// 封装一个计算学生总分的函数
+		function getTotal(arr) {
+			// 计数器
+			const reducer = (accumulator, sum) => accumulator + sum;
+
+			return arr.reduce(reducer);
+		}
+	</script>
+</body>
+</html>
