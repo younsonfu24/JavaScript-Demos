@@ -48,7 +48,7 @@ A box that contains my favorite practice demos~
                 // 总和计数器
                 const reducer = (accumulator, sum) => accumulator + sum;
                 return arr.reduce(reducer);
-             }
+             } 
          
          
          
