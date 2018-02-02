@@ -76,8 +76,8 @@
 			<% for (var i=0; i< data.length; i++) { %>
 				<tr>
 					<td><%=data[i].id%></td>
-					<td><%=data[i].name%></td>
 					<td><%=data[i].class%></td>
+					<td><%=data[i].name%></td>
 					<td><%=data[i].Chinese%></td>
 					<td><%=data[i].Maths%></td>
 					<td><%=data[i].English%></td>
@@ -101,8 +101,8 @@
 			<% for (var i=0; i< data.length; i++) { %>
 				<tr>
 					<td><%=data[i].id%></td>
-					<td><%=data[i].name%></td>
 					<td><%=data[i].class%></td>
+					<td><%=data[i].name%></td>
 					<td><%=data[i].Chinese%></td>
 					<td><%=data[i].Maths%></td>
 					<td><%=data[i].English%></td>
@@ -211,7 +211,6 @@
 		var tpl2 = document.getElementById("tpl2").innerHTML;
 		var html2 = template(tpl2, {data: data2});
 		document.getElementById("finalExamGrade").innerHTML = html2;
-
 
 		// 封装一个对学生考试成绩做判断的函数
 		function getGrade(marks) {

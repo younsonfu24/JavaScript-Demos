@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>简易计算器</title>
+
+	<style>
+		*  {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+		h1 {
+			margin-top: 50px;
+			text-align: center;
+		}
+		#box {
+			width: 200px;
+			height: 250px;
+			box-sizing: content-box;
+			border: 1px solid #ccc;
+			margin: 30px auto;
+		}
+		#display {
+			width: 100%;
+			height: 50px;
+			border: 1px solid #ccc;
+		}
+		#display input {
+			width: 100%;
+			height: 50px;
+			text-align: right;
+			font-size: 16px;
+			font-weight: bold;
+			padding: 0 5px;
+			color: blue;
+		}
+		#control {
+			position: relative;
+			width: 100%;
+			height: 200px;
+		}
+		#control button {
+			float: left;
+			width: 50px;
+			height: 40px;
+			border: 1px solid #ccc;
+			text-align: center;
+			line-height: 40px;
+			font-size: 16px;
+		}
+		#control #add {
+			position: absolute;
+			right: 0;
+			bottom: 0;
+			width: 50px;
+			height: 80px;
+		}
+		#control #dot {
+			line-height: 20px;
+			font-weight: bold;
+		}
+		#control #delete {
+			font-weight: bold;
+		}
+	</style>
+</head>
+<body>
+	<h1>简易计算器</h1>
+	<div id="box">
+		<div id="display">
+			<input type="text" value="0">
+		</div>
+		<div id="control">
+			<button id="clear">C</button>
+			<button id="delete">X</button>
+			<button id="complement">%</button>
+			<button id="divide">/</button>
+			<button id="n7">7</button>
+			<button id="n8">8</button>
+			<button id="n9">9</button>
+			<button id="multiply">x</button>
+			<button id="n4">4</button>
+			<button id="n5">5</button>
+			<button id="n6">6</button>
+			<button id="subtract">-</button>
+			<button id="n1">1</button>
+			<button id="n2">2</button>
+			<button id="n3">3</button>
+			<button></button>
+			<button id="dot">.</button>
+			<button id="n0">0</button>
+			<button id="getResult">=</button>
+			<button></button>
+			<button id="add">+</button>
+		</div>
+	</div>
+
+	<!-- 引入可以格式化数字格式的Numberal.js -->
+	<script src="assets/Numeral-js/numeral.js"></script>
+	<script>
+
+	/*
+		简易计算器的制作思路
+
+		1. 确定设计图、功能需求。要实现的功能如下：
+			(1) 提供0-9的数字键和小数点按钮，给用户点击输入数字
+			(2) 提供"加"、"减"、"乘"、"除"和"取余"的功能
+			(3) 提供"清屏"功能按钮和删除上个输入错误的数字的按钮
+			(4) 通过点击"等于号"，获取最后的计算结果并且显示到"显示屏"上。
+		2. 根据设计图排版和样式。
+		3. 实现业务需求
+		4. Debug
+		5. 上线
+	 */
+
+	 /*
+	 *   【案例小述】
+	 *
+	 *  1. 介绍：这是一个用原声JS实现的简易计算机案例，提供的功能有：键盘输入数字、鼠标输入数字、加减乘除取余运算、回删、清屏等功能。
+	 *  2. 使用的技术：
+	 *  	(1) DIV+CSS排版
+	 *  	(2) DOM操作
+	 *  	(3) ES6新特性之：let、const关键字
+	 *  	(4) 数组
+	 *  	(5) 本地存储之localStorage
+	 *  	(6) 事件
+	 *  	(7) 循环语句、条件语句
+	 *  	(8) 函数封装和调用
+	 *  	(9) 插件使用：Numeral.js
+	 *  3. 意外收获
+	 *  	(1) 认识到，原生JS的DOM对象可以存储到对象中批量操作
+	 *  	(2) 了解到，数字格式化的插件：Numberal.js
+	  */
+	 
+
+	 // 存储localStorage对象
+	 const ls = localStorage;
+
+	 // 存储数字输入状态
+	 // ls.setItem("firstNumber", false);
+
+	 var input = document.getElementsByTagName("input")[0];
+	 // 清空
+	 var clear = document.getElementById("clear");
+	 // 回删一位
+	 var del = document.getElementById('delete');
+	 // 取余
+	 var complement = document.getElementById('complement');
+	 // 减法运算
+	 var subtract = document.getElementById('subtract');
+	 // 加法运算
+	 var add = document.getElementById('add');
+	 // 乘法运算
+	 var multiply = document.getElementById('multiply');
+	 // 除法运算
+	 var divide = document.getElementById('divide');
+	 // 小数点
+	 var dot = document.getElementById('dot');
+	 // 计算结果
+	 var getResult = document.getElementById('getResult');
+
+	 // 将存到一个数组中使用，目的是便于统一操作
+	 var btnArr = [add, subtract, multiply, divide, complement]; 
+
+	 // 当点击以上按钮的时候，将输入框中的数字存储到本地存储中
+	 for (let i=0; i<btnArr.length; i++) {
+	 	btnArr[i].onclick = function() {
+	 		if (ls.getItem("symbol")) {
+
+		 		// 执行计算函数
+				calculator();
+
+		 		// 将得到的运算结果存储为第一次运算数字
+		 		ls.setItem("number1", input.value);
+		 		// 存储新的运算符号到本地存储
+		 		ls.setItem('symbol', btnArr[i].innerHTML);
+	 		} else {
+		 		ls.setItem("number1", input.value);
+		 		ls.setItem('symbol', btnArr[i].innerHTML);
+
+		 		// 清零显示屏
+		 		input.value = 0;
+	 		}
+	 	}
+	 }
+
+	 // 等于按钮的功能实现
+	 getResult.onclick = function() {
+	 	if (ls.getItem('symbol')) {
+
+	 		// 执行计算函数
+			calculator();
+
+	 		// 清除本地存储中的运算符号
+	 		ls.removeItem("symbol");
+	 	}
+	 }
+
+	 // 清空按钮的功能实现
+	 clear.onclick = function() {
+		ls.clear();
+		input.value = 0;
+	 }
+
+	 // 回删按钮的功能实现
+	 del.onclick = function() {
+	 	var val = numFormatter002(input.value);
+	 	input.value = numFormatter001(val.substr(0, val.length-1));
+	 }
+
+	 var n0 = document.getElementById('n0');
+	 var n1 = document.getElementById('n1');
+	 var n2 = document.getElementById('n2');
+	 var n3 = document.getElementById('n3');
+	 var n4 = document.getElementById('n4');
+	 var n5 = document.getElementById('n5');
+	 var n6 = document.getElementById('n6');
+	 var n7 = document.getElementById('n7');
+	 var n8 = document.getElementById('n8');
+	 var n9 = document.getElementById('n9');
+
+	 var numArr = [n0, n1, n2, n3, n4, n5, n6, n7, n8, n9];
+
+	 for (let j=0; j<numArr.length; j++) {
+	 	numArr[j].onclick = function() {
+
+	 		// ls.setItem("firstNumber", true);
+
+	 		var val = numFormatter002(input.value);
+	 		val += numArr[j].innerHTML;
+	 		input.value = numFormatter001(val);
+
+		 	// 执行控制输入框内容长度的函数
+		 	limitLength();
+
+	 	}
+	 }
+
+	 // 封装一个函数，将显示屏上的字符串格式化
+	 function numFormatter001(result) {
+	 	var num = result;
+	    return numeral(num).format("0,0");
+	 }
+
+	 // 封装一个函数，将显示屏上的字符串格式化
+	 function numFormatter002(result) {
+	 	var num = result;
+	    return numeral(num).format("0");
+	 }
+
+	 // 封装一个函数，处理数字的运算
+	 function calculator() {
+
+		// 获取第一个运算数字
+ 		var num1 = parseInt(numFormatter002(ls.getItem('number1')));
+ 		var num2 = parseInt(numFormatter002(input.value));
+
+ 		// 加法运算
+ 		if (ls.getItem('symbol') == '+') {
+	 		input.value = numFormatter001(num1 + num2);
+ 		}
+
+ 		// 减法运算
+ 		if (ls.getItem('symbol') == '-') {
+	 		input.value = numFormatter001(num1 - num2);
+ 		}
+
+ 		// 乘法运算
+ 		if (ls.getItem('symbol') == 'x') {
+	 		input.value = numFormatter001(num1 * num2);
+ 		}
+ 		
+ 		// 除法运算
+ 		if (ls.getItem('symbol') == '/') {
+	 		input.value = numFormatter001(num1 / num2);
+ 		}
+
+ 		// 取余运算
+ 		if (ls.getItem('symbol') == '%') {
+	 		input.value = numFormatter001(num1 % num2);
+ 		}
+	 }
+
+	 // 封装一个函数，实现控制输入的数字长度
+	 function limitLength() {
+	 	if (input.value.length == 18) {
+	 		ls.setItem("input", input.value);
+	 	} else if (input.value.length > 18) {
+	 		input.value = ls.getItem("input");
+	 	}
+	 }
+
+	 input.oninput = function() {
+	 	var content = input.value;
+	 	input.value = numFormatter001(content);
+
+	 	// 执行控制输入框内容长度的函数
+	 	limitLength();
+	 }
+
+
+
+	/*
+		遇到的BUG
+
+		1. Q:计算的逻辑问题
+		   A:
+	   		(1) 用户自由输入【第一个运算数】，设置面板的显示格式化为：每三位数后添加一个英文逗号，不超过18位数字；
+	   		(2) 当点击了【运算符按钮】：面板上的数字会被存储到本地，点击的运算符号也会被存储到本地，这时候面板上的数字归为0；
+	   		(3) 之后是输入【第二个运算数】，
+	   		当点击按钮为：
+	   			1) 【等于按钮】
+	   				获得计算结果并且显示到面板上，同时清空本地上存储的【第一个运算数】和【运算符号】
+	   			2) 【运算符按钮】
+	   				或得上次的运算结果，显示到面板上，同时将结果作为下次运算的【第一个运算数】，以此类推。
+	   2. Q：处理数字格式化显示的问题
+	      A：使用插件：Numeral.js
+	   3. Q：限制输入框中输入的数字长度
+			A：利用表单的input事件本地存储，当输入的内容到达限定长度的时候，将内容更新到本地存储中。当用户输入的内容超过限定长度时，输入框只显示刚好到达限定长度的本地存储中的字符串。
+	*/
+	</script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>三角形</title>
+
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+		html, body {
+			font-size: 12px;
+		}
+		span {
+			visibility: hidden;
+		}
+		#box {
+			width: 100%;
+			line-height: 10px;
+		}
+	</style>
+</head>
+<body>
+	<div id="box"></div>
+
+	<script>
+	/*
+		需求：以纯JS绘制一个“等腰三角形”
+
+		1. 使用知识：循环语句、输出语句、函数封装、DOM操作
+		2. 实现思路：
+			(1) 以for循环打印空格和星号，形成一个“等腰三角形”的形状
+			(2) for嵌套打印，实现三角形“等腰”的效果
+			(3) 将打印三角形的代码块封装到一个函数里面，实现自定义三角形的大小
+		3. 配合CSS样式给容器设置行高，使三角形更形象美观
+	 */
+		var box = document.getElementById("box");
+
+		function drawATriangle(box, max) {
+
+			// 存储打印的内容
+			var html = "";
+
+			// 外层循环，作用是控制打印的空格和星号的个数
+			for (var i=1; i<max; i=i+2) {
+
+				// 打印空格
+				for (var k=(max-i-1)/2; k>0; k--) {
+					html += "<span>_</span>";
+				}
+
+				// 打印星号
+				for (var j=0; j<i; j++) {
+					html += "*";
+				}
+				html += "</br>";
+			}
+
+
+			box.innerHTML = html;
+		}
+
+		drawATriangle(box, Number(prompt("你要多大的等腰三角形？(只能输入数字哟)")));
+
+		/*
+			遇到的BUG和解决
+
+			1. Question：
+				for循环打印出的星号的个数和空格的大小会影响实现拼接成等腰三角形
+				Answer：
+					尝试了两个方案：
+					(1) 将每一行打印的星号个数控制为基数，扔未能解决
+					(2) 用下划线替换空格，此时下划线和星号的大小是一样的，也就不会有大小的影响了
+			2. Question：
+					下滑线影响美观
+				Answer：给下划线加上span标签，并且给span元素加上样式：visibility: hidden; 既不会影响下划线原本的占位，也不会影响美观。
+		 */
+	</script>
+</body>
+</html>
