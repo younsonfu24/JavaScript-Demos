@@ -1,0 +1,177 @@
+@import "./base.less";
+
+#wrapper {
+	width: 1000px;
+	margin: 0 auto;
+	border: 1px solid #ccc;
+
+	#box1 {
+		width: 350px;
+		margin: 10px auto;
+
+		div {
+			float: left;
+			width: 30px;
+			height: 40px;
+			text-align: center;
+			font-size: 20px;
+			line-height: 40px;
+			margin: 10px 5px;
+			border: 1px solid #ccc;
+		}
+
+		#mh {
+			border: none;
+			font-size: 24px;
+			font-weight: bold;
+		}
+	}
+
+	#box2 {
+		width: 500px;
+		height: 500px;
+		border: 1px solid #ccc;
+		margin: 10px auto;
+
+		.clock {
+			position: relative;
+			width: 300px;
+			height: 300px;
+			border: 1px solid #000;
+			border-radius: 50%;
+			margin: 40px auto 0;
+
+			div {
+				position: absolute;
+			}
+
+			.dot {
+				top: 50%;
+				left: 50%;
+				margin-top: -10px;
+				margin-left: -10px;
+				width: 20px;
+				height: 20px;
+				border: 1px solid silver;
+				border-radius: 50%;
+
+				.dot2 {
+					transform: translate(-50%, -50%);
+					top: 50%;
+					left: 50%;
+					width: 5px;
+					height: 5px;
+					border: 1px solid #000;
+					border-radius: 50%;
+				}
+			}
+
+			#hBar {
+				width: 8px;
+				height: 100px;
+				background-color: red;
+				top: 50%;
+				left: 50%;
+				margin-left: -3px;
+				margin-top: -90px;
+				transform-origin: 4px 90px;
+				transform: rotateZ(340deg);
+			}
+
+			#mBar {
+				width: 6px;
+				height: 120px;
+				background-color: green;
+				top: 50%;
+				left: 50%;
+				margin-left: -2px;
+				margin-top: -110px;
+				transform-origin: 3px 110px;
+				transform: rotateZ(60deg);
+			}
+
+			#sBar {
+				width: 2px;
+				height: 120px;
+				background-color: blue;
+				top: 50%;
+				left: 50%;
+				margin-left: -0.5px;
+				margin-top: -110px;
+				transform-origin: 1px 110px;
+				transform: rotateZ(180deg);
+			}
+		
+			.num {
+				font-size: 30px;
+				font-weight: bold;
+			}
+
+			.n12 {
+				top: 4%;
+				left: 50%;
+			}
+
+			.n1 {
+				top: 10.666%;
+				left: 71.666%;
+			}
+
+			.n2 {
+				top: 27.333%;
+				left: 89.333%;
+			}
+
+			.n3 {
+				top: 50%;
+				left: 94%;
+			}
+
+			.n4 {
+				top: 70.667%;
+				left: 88.333%;
+			}
+
+			.n5 {
+				top: 85.334%;
+				left: 71.666%;
+			}
+
+			.n6 {
+				top: 90%;
+				left: 50%;
+			}
+
+			.n7 {
+				top: 85.334%;
+				left: 28.333%;
+			}
+
+			.n8 {
+				top: 70.667%;
+				left: 11.666%;
+			}
+
+			.n9 {
+				top: 50%;
+				left: 6%;
+			}
+
+			.n10 {
+				top: 27.333%;
+				left: 11.666%;
+			}
+
+			.n11 {
+				top: 10.666%;
+				left: 28.333%;
+			}
+		}
+	}
+
+	h1 {
+		text-align: center;
+		padding-top: 20px;
+		padding-bottom: 20px;
+	}
+}

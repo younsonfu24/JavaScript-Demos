@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>5-电子表和时钟动态显示客户端时间</title>
+	
+	<!-- 外链样式文件 -->
+	<link rel="stylesheet" href="./css/style5.css">
+
+</head>
+<body>
+	<div id="wrapper">
+		<div id="box1" class="clearfix">
+			<h1>电子表显示</h1>
+			<div id="h1"></div>
+			<div id="h2"></div>
+			<div id="mh">:</div>
+			<div id="m1"></div>
+			<div id="m2"></div>
+			<div id="mh">:</div>
+			<div id="s1"></div>
+			<div id="s2"></div>
+		</div>
+
+		<br>
+		<hr>
+		<br>
+
+		<div id="box2">
+			<h1>时钟显示</h1>
+			<div class="clock">
+				<div class="dot">
+					<div class="dot2"></div>
+				</div>
+				<div id="hBar"></div>
+				<div id="mBar"></div>
+				<div id="sBar"></div>
+				<div class="num n1">1</div>
+				<div class="num n2">2</div>
+				<div class="num n3">3</div>
+				<div class="num n4">4</div>
+				<div class="num n5">5</div>
+				<div class="num n6">6</div>
+				<div class="num n7">7</div>
+				<div class="num n8">8</div>
+				<div class="num n9">9</div>
+				<div class="num n10">10</div>
+				<div class="num n11">11</div>
+				<div class="num n12">12</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+
+		// 时
+		var h1 = document.getElementById("h1");
+		var h2 = document.getElementById("h2");
+		// 分
+		var m1 = document.getElementById("m1");
+		var m2 = document.getElementById("m2");
+		// 秒
+		var s1 = document.getElementById("s1");
+		var s2 = document.getElementById("s2");
+
+		// 时针
+		var hBar = document.getElementById("hBar");
+
+		// 分针
+		var mBar = document.getElementById("mBar");
+
+		// 秒针
+		var sBar = document.getElementById("sBar");
+
+		showClock();
+
+
+		var timeId000 = setInterval(showWatch, 1000);
+
+		var timeId111 = setInterval(showClock, 1000);
+
+		var nums = document.getElementsByClassName("num");
+		for (var i=0; i<nums.length; i++) {
+			nums[i].style.marginLeft = "-"+ nums[i].clientWidth/2 + "px";
+			nums[i].style.lineHeight = nums[i].clientHeight/2 + "px";
+		}
+
+		function showClock() {
+
+			// 获取Date实例
+			var date = new Date();
+
+			var sDeg = date.getSeconds()*360/60;
+			var mDeg = date.getMinutes()*360/60;
+			var hDeg = date.getHours()>12 ? date.getHours()*360/12 : (date.getHours()-12)*360/12;
+
+			sBar.style.transform = "rotateZ(" + sDeg + "deg)";
+			mBar.style.transform = "rotateZ(" + mDeg + "deg)";
+			hBar.style.transform = "rotateZ(" + hDeg + "deg)";
+		}
+
+		function showWatch() {
+
+			// 获取Date实例
+			var date = new Date();
+
+			// h1
+			var h1Txt = Math.floor(date.getHours()/10); 
+			// h2
+			var h2Txt = date.getHours()%10; 
+			// m1
+			var m1Txt = Math.floor(date.getMinutes()/10);
+			// m2
+			var m2Txt = date.getMinutes()%10;
+			// s1
+			var s1Txt = Math.floor(date.getSeconds()/10); 
+			// s2
+			var s2Txt = date.getSeconds()%10;
+
+			h1.innerHTML = h1Txt;
+			h2.innerHTML = h2Txt;
+			m1.innerHTML = m1Txt;
+			m2.innerHTML = m2Txt;
+			s1.innerHTML = s1Txt;
+			s2.innerHTML = s2Txt;
+		}
+	</script>
+</body>
+</html>
